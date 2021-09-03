@@ -15,7 +15,9 @@ function TodoHead() {
   const isDeleting = useTodoIsDeleting();
 
   const state = useTodoState();
-  const leftCount = state.filter(arr => !arr.done).length;
+  const leftCount = state.items ? 
+    Object.values(state.items).filter(arr => !arr.done).length :
+    0;
 
   return (
     <HeaderContainer>

@@ -1,22 +1,34 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import TodoItem from './TodoItem';
-import { useTodoState } from '../TodoContext';
+import { useTodoCurrentList, useTodoState } from '../TodoContext';
 
 function Todos() {
-  const todos = useTodoState();
+  const state = useTodoState();
+  const currentList = useTodoCurrentList();
+
+  if (currentList.current === undefined) return null;
+
+  const listId = Object.values(state.lists)
+    .find(list => list.id === currentList.current.id);
+
+  const items = Object.values(state.items).filter(item => 
+    item.listId === listId)
 
   return (
     <ContentContainer>
       <ContentList>
-        {todos.map(todo => (
-          <TodoItem 
-            key={todo.id}
-            id={todo.id}
-            text={todo.text}
-            done={todo.done}
-          />
-        ))}
+        {items !== undefined ? 
+          items.map(todo => (
+            <TodoItem 
+              key={todo.id}
+              id={todo.id}
+              text={todo.text}
+              done={todo.done}
+            />
+          )) :
+          <li>no items</li>
+        }
       </ContentList>
     </ContentContainer>
   )

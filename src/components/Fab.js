@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useTodoDispatch, useTodoIsDeleting, useTodoNextId } from '../TodoContext';
+import { useTodoDispatch, useTodoIsDeleting } from '../TodoContext';
+import { v4 as uuidv4 } from 'uuid';
 import styled from '@emotion/styled';
-import fab from '../svgs/fab.svg';
 
 function Fab() {
 
@@ -10,22 +10,19 @@ function Fab() {
 
   const isDeleting = useTodoIsDeleting();
   const dispatch = useTodoDispatch();
-  const nextId = useTodoNextId();
   
   const onCreate = () => {
       const text = prompt('what to do', '');
       if (text === null || text === '') return;
 
       dispatch({ 
-      type: 'CREATE', 
+      type: 'CREATEITEM', 
       todo: {
-        id: nextId.current,
+        id: uuidv4(),
         text: text,
         done: false,
       }
     })
-
-    nextId.current += 1;
   }
 
   const onRemove = () => {
