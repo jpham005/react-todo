@@ -1,9 +1,9 @@
 import React from 'react';
-import { useTodoCurrentUser } from '../TodoContext';
+import { useTodoDispatch } from '../TodoContext';
 
 function LogOut() {
-  const currentUser = useTodoCurrentUser();
-  const onLogOut = () => currentUser.current = undefined;
+  const dispatch = useTodoDispatch();
+  const onLogOut = () => dispatch({ type: 'LOGOUT' })
 
   return (
     <button onClick={onLogOut}>

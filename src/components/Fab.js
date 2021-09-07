@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { useTodoDispatch, useTodoIsDeleting } from '../TodoContext';
-import { v4 as uuidv4 } from 'uuid';
+import { useTodoDispatch } from '../TodoContext';
 import styled from '@emotion/styled';
 
 function Fab() {
@@ -8,7 +7,6 @@ function Fab() {
   const [isExtended, setIsExtended] = useState(false);
   const onToggle = () => setIsExtended(!isExtended);
 
-  const isDeleting = useTodoIsDeleting();
   const dispatch = useTodoDispatch();
   
   const onCreate = () => {
@@ -17,8 +15,7 @@ function Fab() {
 
       dispatch({ 
       type: 'CREATEITEM', 
-      todo: {
-        id: uuidv4(),
+      payload: {
         text: text,
         done: false,
       }
@@ -26,8 +23,7 @@ function Fab() {
   }
 
   const onRemove = () => {
-    isDeleting.current = !isDeleting.current
-    return;
+    dispatch({ type: 'TOGGLE-DELETE' })
   }
 
   return (

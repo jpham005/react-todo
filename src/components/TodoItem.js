@@ -1,12 +1,17 @@
 import React from 'react';
-import { useTodoDispatch, useTodoIsDeleting } from '../TodoContext';
+import { useTodoDispatch, useTodoState } from '../TodoContext';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 
 function TodoItem({ id, done, text }) {
   const dispatch = useTodoDispatch();
-  const isDeleting = useTodoIsDeleting();
-  const onToggle = () => dispatch({ type: 'TOGGLE', id, isDeleting });
+  const state = useTodoState();
+  const isDeleting = state.isDeleting;
+
+  const onToggle = () => dispatch({ type: 'TOGGLE-ITEM', payload: {
+      id, 
+      isDeleting,
+    } 
+  });
   
   return (
     <>
@@ -27,8 +32,7 @@ const Item = styled.li`
   font-size: 1.5rem;
   user-select: none;
   ${props =>
-    props.done &&
-    css`
+    props.done && `
       color: var(--grey-400);
       text-decoration: line-through;
     `

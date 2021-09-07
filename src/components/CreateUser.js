@@ -1,39 +1,93 @@
-import React from 'react';
-import { useTodoDispatch } from '../TodoContext';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from 'react';
+import { useTodoDispatch, useTodoValidateFromServer } from '../TodoContext';
 
 function CreateUser() {
   const dispatch = useTodoDispatch();
+  const validateFromServer = useTodoValidateFromServer();
+  const [open, setOpen] = useState(false);
+  const [inputs, setInputs] = useState({
+    username: '',
+    password: '',
+  })
 
-  const onCreateUser = () => {
-    const id = uuidv4();
-    
-    const username = prompt('username', '');
-    if (username === null || username === '')
-      return alert('username is empty');
+  const { username, password } = inputs;
 
-    const password = prompt('password', '');
-    if (password === null || password === '')
-      return alert('password is empty');
-    if (password < 2 || password > 20)
-      return alert('password must be between 2 ~ 20');
-    
-    const image = prompt('profile image','');
+  const onToggle = () => setOpen(!open);
+  const onChange = e => {
+    const { value, name } = e.target;
+    setInputs({
+      ...inputs,
+      [name]: value,
+    })
+  }
 
+  const validate = () => {    
+    if (username === '') {
+      console.log(1)
+      alert('username is empty');
+      return;
+    }
+
+    if (username.length < 2 || username.length > 10) {
+      alert('username\'s length must be between 2 ~ 10');
+      return;
+    }
+
+    if (password === '') {
+      alert('password is empty');
+      return;
+    }
+
+    if (password.length < 2 || password.length > 10) {
+      alert('password must be between 2 ~ 10');
+      return;
+    }
+
+    if (validateFromServer('user', username) === 'failed') {
+      alert('username has occupied');
+      return;
+    }
+  }
+
+  const onCreate = e => {
+    e.preventDefault();
+    validate();
+    //async & await?
     dispatch({
       type: 'CREATEUSER',
-      user: {
-        id,
-        username,
+      payload: {
+        name: username,
         password,
-        image,
       }
-    })
+    });
+
+    setInputs({ username: '', password: '' });
+    setOpen(false);
   }
 
   return (
     <>
-      <button onClick={onCreateUser}>
+      {open && (
+        <form>
+          <input
+            name="username"
+            value={username}
+            placeholder="user name!"
+            autoFocus
+            onChange={onChange}
+          />
+          <input
+            name="password"
+            value={password}
+            placeholder="password!"
+            onChange={onChange}
+          />
+          <button onClick={onCreate}>
+            submit
+          </button>
+        </form>
+      )}
+      <button onClick={onToggle}>
         new user
       </button>
     </>

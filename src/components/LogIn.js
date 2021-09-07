@@ -1,31 +1,31 @@
 import React from 'react';
-import { useTodoCurrentUser, useTodoState } from '../TodoContext';
+import { useTodoDispatch } from '../TodoContext';
+import CreateUser from './CreateUser';
 
 function LogIn() {
-  const state = useTodoState();
-  const currentUser = useTodoCurrentUser();
-  console.log(state.users)
+  const dispatch = useTodoDispatch();
+
   const onLogIn = () => {
     const username = prompt('what\'s your name?','');
-    currentUser.current = Object.values(state.users)
-      .find(user => user.username === username)
     const password = prompt('password?','');
 
-    validate(currentUser.current, password);
+    if (validate(username, password) === 'success')
+      dispatch({ type: 'LOGIN', payload: username });
+    else
+      alert('something is wrong zz');
   }
-
+  
   const validate = (user, password) => {
-    if (user === undefined || password !== user.password){
-      currentUser.current = undefined;
-      return alert('something is wrong');
-    }
-    alert('login success!');
+    //sendServerAndGetResult(user, password);
   }
 
   return (
-    <button onClick={onLogIn}>
-      login
-    </button>
+    <>
+      <button onClick={onLogIn}>
+        login
+      </button>
+      <CreateUser />
+    </>
   )
 }
 

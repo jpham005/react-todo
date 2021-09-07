@@ -1,11 +1,10 @@
 import React from 'react';
-import { useTodoCurrentUser, useTodoListIsOpen, useTodoState } from '../TodoContext';
+import { useTodoListIsOpen, useTodoState } from '../TodoContext';
 import TodoList from './TodoList';
 
 function SelectList() {
   const state = useTodoState();
   const open = useTodoListIsOpen();
-  const currentUser = useTodoCurrentUser();
   
   const onShowList = () => {
     open.current = !open.current
@@ -13,7 +12,7 @@ function SelectList() {
   }
 
   const userList = Object.values(state.lists)
-    .filter(list => list.ownerId === currentUser.current.id);
+    .filter(list => list.ownerId === state.user.username);
 
   if (userList === undefined) return alert('you dont have any list!')
 

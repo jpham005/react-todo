@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useTodoIsDeleting, useTodoState } from '../TodoContext'
+import { useTodoState } from '../TodoContext'
 
 function TodoHead() {
   const date = new Date();
@@ -11,8 +11,6 @@ function TodoHead() {
     day: '2-digit',
     hour: '2-digit',
   }).format(date);
-
-  const isDeleting = useTodoIsDeleting();
 
   const state = useTodoState();
   const leftCount = state.items ? 
@@ -25,7 +23,12 @@ function TodoHead() {
         {timeFormat.replaceAll('.', '')}
       </HeaderTitle>
       <HeaderLeftCount>
-        {leftCount}개 할 일 남음 <br />{`${isDeleting.current}`}
+        {leftCount}개 할 일 남음 <br />
+        {`삭제 중: ${state.isDeleting}`}<br />
+        {state.currentList === null
+          ? '현재 리스트: 없음'
+          : `현재 리스트: ${state.currentList.name}`
+        }
       </HeaderLeftCount>
     </HeaderContainer>
   )

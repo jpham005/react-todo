@@ -1,49 +1,99 @@
 import React, { createContext, useReducer, useRef, useContext } from 'react';
-
-const initialTodos = {
-  users: {
-    admin: {
-      id: 'admin',
-      username: 'admin',
-      password: 'admin',
-    }
-  },
-  lists: {
-    preventNull: {
-      id: null,
-      name: null,
-      ownerId: null,
-    }
-  },
+/*interface InitialState {
+  user: {
+    isLoggedIn: boolean;
+    username: string;
+  };
+  lists: string[];
   items: {
-    preventNull: {
-      id: null,
-      listId: null,
-      text: null,
-    }
+    [key: string]: {
+      id: string | null,
+      text: string | null,
+    }[];
+  }
+}*/
+const initialTodos = {
+  user: {
+    isLoggedIn: true,
+    username: 'admin',
   },
+  lists: [
+
+  ],
+  items: [
+
+  ],
+  isDeleting: false,
+
+  currentList: null,
+}
+
+function save() {
+
 }
 
 function todoReducer(state, action) {
   switch (action.type) {
     case 'CREATEUSER':
+      save(action.payload)
+      return state;
+    
+    case 'CREATELIST':
+      save(action.payload)
+      const newList = [];
+      //const newList = load(by listname)
       return {
         ...state,
-        users.action.user.id: action.user
+        lists: state.lists.concat(newList)
       }
-      return state.users[action.user.id] = action.user;
-    case 'CREATELIST':
-      return state.lists[action.list.id] = action.list;
+    
     case 'CREATEITEM':
-      return state.items[action.item.id] = action.item;
-      
-    case 'TOGGLE':
-      if (action.isDeleting.current === true){
-        return state.items.filter(todo => todo.id !== action.id)
+      save(action.payload)
+      const newItem = {};
+      return {
+        ...state,
+        items: state.items.concat(newItem)
       }
-      return state.items.map(todo =>
-          todo.id === action.id ? { ...todo, done: !todo.done } : todo
-        );
+    
+    case 'LOGIN':
+      const newState = {user:{},lists:[],items:{}}
+      //load user's lists, items from server
+      return {
+       ...newState,
+       user: {
+         isLoggedIn: true,
+        }
+      }
+    
+    case 'LOGOUT':
+      return {
+        ...initialTodos,
+        user: {
+          isLoggedIn: false,
+          username: null,
+        }
+      }
+    
+    case 'TOGGLE-ITEM':
+      if (action.isDeleting === true) {
+        return {
+          ...state,
+          items: state.items.filter(item => item.id !== action.payload.id)
+        }
+      }
+
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.id === action.payload.id ? {...item, done: !item.done} : item
+        ),
+      }
+    
+    case 'TOGGLE-DELETE':
+      return {
+        ...state,
+        isDeleting: !state.isDeleting,
+      }
     default:
       throw new Error(`unhandled action type: ${action.type}`)
   }
@@ -51,37 +101,27 @@ function todoReducer(state, action) {
 
 const TodoStateContext = createContext();
 const TodoDispatchContext = createContext();
-const TodoNextIdContext = createContext();
-const TodoIsDeletingContext = createContext();
 const TodoListIsOpenContext = createContext();
-const TodoCurrentUserContext = createContext();
-const TodoCurrentListContext = createContext();
+const TodoValiateFromServerContext = createContext();
 
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(todoReducer, initialTodos);
-  const nextId = useRef(3);
-  const isDeleting = useRef(false);
   const listIsOpen = useRef(false);
-  const currentUser = useRef(`asdf`);
-  const currentList = useRef(undefined);
+  const validateFromServer = (type, name) => {
+    //somehow validate in server
+  }
 
   return (
     <TodoStateContext.Provider value={state}>
       <TodoDispatchContext.Provider value={dispatch}>
-        <TodoNextIdContext.Provider value={nextId}>
-          <TodoIsDeletingContext.Provider value={isDeleting}>
-            <TodoListIsOpenContext.Provider value={listIsOpen}>
-              <TodoCurrentUserContext.Provider value={currentUser}>
-                <TodoCurrentListContext.Provider value={currentList}>
-                  {children}
-                </TodoCurrentListContext.Provider>
-              </TodoCurrentUserContext.Provider>
-            </TodoListIsOpenContext.Provider>
-          </TodoIsDeletingContext.Provider> 
-        </TodoNextIdContext.Provider>
+        <TodoValiateFromServerContext.Provider value={validateFromServer}>
+          <TodoListIsOpenContext.Provider value={listIsOpen}>
+            {children}
+          </TodoListIsOpenContext.Provider>
+        </TodoValiateFromServerContext.Provider>
       </TodoDispatchContext.Provider>
     </TodoStateContext.Provider>
-    );
+  );
 }
 
 export function useTodoState() {
@@ -92,22 +132,10 @@ export function useTodoDispatch() {
   return useContext(TodoDispatchContext);
 }
 
-export function useTodoNextId() {
-  return useContext(TodoNextIdContext);
-}
-
-export function useTodoIsDeleting() {
-  return useContext(TodoIsDeletingContext);
-}
-
 export function useTodoListIsOpen() {
   return useContext(TodoListIsOpenContext);
 }
 
-export function useTodoCurrentUser() {
-  return useContext(TodoCurrentUserContext);
-}
-
-export function useTodoCurrentList() {
-  return useContext(TodoCurrentListContext);
+export function useTodoValidateFromServer() {
+  return useContext(TodoValiateFromServerContext);
 }

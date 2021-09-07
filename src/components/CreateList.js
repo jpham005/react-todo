@@ -1,34 +1,65 @@
-import React from 'react';
-import { useTodoDispatch, useTodoState } from '../TodoContext';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState } from 'react';
+import { useTodoDispatch, useTodoValidateFromServer } from '../TodoContext';
 
 function CreateList() {
   const dispatch = useTodoDispatch();
-  const state = useTodoState();
+  const validateFromServer = useTodoValidateFromServer();
 
-  const onCreateList = () => {
-    const id = uuidv4();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('');
 
-    const name = prompt('list name', '');
-    if (name === null || name === '')
-      return alert('name is empty');
-    if (Object.values(state.users)
-      .find(users => users.name === name) !== undefined)
-      return alert('this name has occupied');
+  const onToggle = () => setOpen(!open);
+  const onChange = e => setValue(e.target.value)
+
+  const validate = () => {
+    if (value === '') {
+      alert('listname is empty');
+      return;
+    }
+
+    if (value < 2 || value > 10) {
+      alert('value must be between 2 ~ 10');
+      return;
+    }
     
-    const ownerId = state.currentUser.id;
+    if (validateFromServer('list', value) === 'failed') {
+      alert('list name has occupied');
+      return;
+    }
+  }
+  
+  const onSubmit = e => {
+    e.preventDefault();
+    validate();
+    //async & await?
+    dispatch({
+      type: 'CREATELIST',
+      payload: {
+        name: value,
+      }
+    });
 
-    dispatch({ type: 'CREATELIST', list: {
-      id,
-      name,
-      ownerId,
-    }})
+    setValue('');
+    setOpen(false);
   }
 
   return (
-    <button onClick={onCreateList}>
-      new List
-    </button>
+    <>
+      {open && (
+        <form onSubmit={onSubmit}>
+          <input
+            type="text"
+            value={value}
+            placeholder="list name!"
+            autoFocus
+            onChange={onChange}
+          />
+        </form>
+      )}
+      <button onClick={onToggle}>
+        new List
+      </button>
+    </>
   )
 }
 

@@ -1,13 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import TodoItem from './TodoItem';
-import { useTodoCurrentList, useTodoState } from '../TodoContext';
+import { useTodoState } from '../TodoContext';
 
 function Todos() {
   const state = useTodoState();
-  const currentList = useTodoCurrentList();
-
-  if (currentList.current === undefined) return null;
+  const currentList = state.currentList;
 
   const listId = Object.values(state.lists)
     .find(list => list.id === currentList.current.id);

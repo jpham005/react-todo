@@ -1,14 +1,13 @@
 import React from 'react';
-import { useTodoCurrentList, useTodoListIsOpen, useTodoState } from '../TodoContext';
+import { useTodoListIsOpen, useTodoState } from '../TodoContext';
 
 function TodoList({ id, name }) {
   const state = useTodoState();
   const open = useTodoListIsOpen();
-  const currentList = useTodoCurrentList();
-  
+
   const onSelectList = () => {
-    currentList.current = Object.values(state.lists)
-      .find(list => list.id === currentList.current.id);
+    state.currentList = Object.values(state.lists)
+      .find(list => list.id === state.currentList.id);
     open.current = !open.current;
     return;
   }
