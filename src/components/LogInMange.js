@@ -15,8 +15,8 @@ function LogInMange() {
     return (
       <>
         <LogOut /> <br />
-        <CreateList />
-        <SelectList /><br />
+        <CreateList /> <br />
+        {state.lists && `리스트를 고르세요 : ${<SelectList />}`}<br />
         {state.currentList && <Todos />}
       </>
     )

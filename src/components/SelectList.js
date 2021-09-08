@@ -1,36 +1,23 @@
-import React from 'react';
-import { useTodoListIsOpen, useTodoState } from '../TodoContext';
-import TodoList from './TodoList';
+import React, { useEffect, useState } from 'react';
+import { useTodoDispatch, useTodoState } from '../TodoContext';
 
 function SelectList() {
   const state = useTodoState();
-  const open = useTodoListIsOpen();
-  
-  const onShowList = () => {
-    open.current = !open.current
-    return;
-  }
+  const dispatch = useTodoDispatch();
+  const switchList = '';
 
-  const userList = Object.values(state.lists)
-    .filter(list => list.ownerId === state.user.username);
-
-  if (userList === undefined) return alert('you dont have any list!')
+  useEffect(() => {
+    dispatch({ type: 'SWITCHLIST', payload: switchList })  
+  }, [switchList])
 
   return (
-    <>
-      {open.current && (
-        userList.map(list => 
-          <TodoList
-            key={list.id}
-            id={list.id}
-            name={list.name}
-          />
-        )
-      )}
-      <button onClick={onShowList}>
-        select list
-      </button>
-    </>
+    <form>
+      <select name={switchList}>
+        {state.lists.map(list => {
+          <option value={list.name}>{list.name}</option>
+        })}
+      </select>
+    </form>
   )
 }
 

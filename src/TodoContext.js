@@ -18,7 +18,9 @@ const initialTodos = {
     username: 'admin',
   },
   lists: [
-
+    {id: 1, name: 'list1'},
+    {id: 2, name: 'list2'},
+    {id: 3, name: 'list3'},
   ],
   items: [
 
@@ -74,6 +76,12 @@ function todoReducer(state, action) {
         }
       }
     
+    case 'SWITCHLIST':
+      return {
+        ...state,
+        currentList: action.payload
+      }
+
     case 'TOGGLE-ITEM':
       if (action.isDeleting === true) {
         return {
@@ -101,12 +109,10 @@ function todoReducer(state, action) {
 
 const TodoStateContext = createContext();
 const TodoDispatchContext = createContext();
-const TodoListIsOpenContext = createContext();
 const TodoValiateFromServerContext = createContext();
 
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(todoReducer, initialTodos);
-  const listIsOpen = useRef(false);
   const validateFromServer = (type, name) => {
     //somehow validate in server
   }
@@ -115,9 +121,7 @@ export function TodoProvider({ children }) {
     <TodoStateContext.Provider value={state}>
       <TodoDispatchContext.Provider value={dispatch}>
         <TodoValiateFromServerContext.Provider value={validateFromServer}>
-          <TodoListIsOpenContext.Provider value={listIsOpen}>
-            {children}
-          </TodoListIsOpenContext.Provider>
+          {children}
         </TodoValiateFromServerContext.Provider>
       </TodoDispatchContext.Provider>
     </TodoStateContext.Provider>
@@ -130,10 +134,6 @@ export function useTodoState() {
 
 export function useTodoDispatch() {
   return useContext(TodoDispatchContext);
-}
-
-export function useTodoListIsOpen() {
-  return useContext(TodoListIsOpenContext);
 }
 
 export function useTodoValidateFromServer() {

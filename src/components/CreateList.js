@@ -50,7 +50,6 @@ function CreateList() {
       {open && (
         <form onSubmit={onSubmit}>
           <input
-            type="text"
             value={value}
             placeholder="list name!"
             autoFocus

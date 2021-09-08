@@ -1,21 +1,16 @@
-import React from 'react';
-import { useTodoListIsOpen, useTodoState } from '../TodoContext';
+import React, { useEffect, useState } from 'react';
+import { useTodoState } from '../TodoContext';
 
-function TodoList({ id, name }) {
+function TodoList({ name }) {
   const state = useTodoState();
-  const open = useTodoListIsOpen();
+  const [value, setValue] = useState()
+  
+  useEffect(() => {
 
-  const onSelectList = () => {
-    state.currentList = Object.values(state.lists)
-      .find(list => list.id === state.currentList.id);
-    open.current = !open.current;
-    return;
-  }
+  }, [value])
 
   return (
-    <button onClick={onSelectList}>
-      {name}
-    </button>
+    <option value={value}>{name}</option>
   )
 }
 
