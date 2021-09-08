@@ -12,17 +12,19 @@ function CreateList() {
   const onChange = e => setValue(e.target.value)
 
   const validate = () => {
-    if (value === '') {
+    const strValue = String(value);
+
+    if (strValue === '') {
       alert('listname is empty');
       return;
     }
 
-    if (value < 2 || value > 10) {
+    if (strValue.length < 2 || strValue.length > 10) {
       alert('value must be between 2 ~ 10');
       return;
     }
     
-    if (validateFromServer('list', value) === 'failed') {
+    if (validateFromServer('list', strValue) === 'failed') {
       alert('list name has occupied');
       return;
     }

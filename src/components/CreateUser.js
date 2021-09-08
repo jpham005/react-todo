@@ -22,13 +22,14 @@ function CreateUser() {
   }
 
   const validate = () => {    
-    if (username === '') {
+    const strUsername = String(username);
+    if (strUsername === '') {
       console.log(1)
       alert('username is empty');
       return;
     }
 
-    if (username.length < 2 || username.length > 10) {
+    if (strUsername.length < 2 || strUsername.length > 10) {
       alert('username\'s length must be between 2 ~ 10');
       return;
     }
@@ -43,7 +44,7 @@ function CreateUser() {
       return;
     }
 
-    if (validateFromServer('user', username) === 'failed') {
+    if (validateFromServer('user', strUsername) === 'failed') {
       alert('username has occupied');
       return;
     }
