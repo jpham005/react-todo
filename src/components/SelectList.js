@@ -1,24 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { useTodoDispatch, useTodoState } from '../TodoContext';
+import React from 'react';
+import { useTodoState } from '../TodoContext';
+import TodoList from './TodoList';
 
 function SelectList() {
   const state = useTodoState();
-  const dispatch = useTodoDispatch();
-  const switchList = '';
+  const currentPage = state.currentListPage;
 
-  useEffect(() => {
-    dispatch({ type: 'SWITCHLIST', payload: switchList })  
-  }, [switchList])
+  const rendering = () => {
+    const result = [];
 
-  return (
-    <form>
-      <select name={switchList}>
-        {state.lists.map(list => {
-          <option value={list.name}>{list.name}</option>
-        })}
-      </select>
-    </form>
-  )
+    for (let i = currentPage - 1; i < currentPage + 3; i++) {
+      result.push(
+        <span key={i}>
+          <TodoList
+            list={state.lists[i]}
+          />
+        </span>
+      )
+    }
+
+    return result;
+  }
+
+  return <span>{rendering()}</span>;
 }
 
+  
 export default SelectList;

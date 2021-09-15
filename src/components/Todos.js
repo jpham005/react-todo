@@ -1,37 +1,34 @@
 import React from 'react';
-import styled from '@emotion/styled';
+//import styled from '@emotion/styled';
 import TodoItem from './TodoItem';
 import { useTodoState } from '../TodoContext';
 
 function Todos() {
   const state = useTodoState();
-  const currentList = state.currentList;
-
-  const listId = Object.values(state.lists)
-    .find(list => list.id === currentList.current.id);
-
-  const items = Object.values(state.items).filter(item => 
-    item.listId === listId)
-
+  const currentListId = state.currentList.id;
+//need to make validating proccess (find items by listId)
+  const items = state.items.filter(item => item.listId === currentListId)
   return (
-    <ContentContainer>
-      <ContentList>
-        {items !== undefined ? 
-          items.map(todo => (
+//    <ContentContainer>
+//      <ContentList>
+<>
+        {items !== [] ? //need to change here too
+          items.map(item => (
             <TodoItem 
-              key={todo.id}
-              id={todo.id}
-              text={todo.text}
-              done={todo.done}
+              //key={item.id}
+              id={item.id}
+              text={item.text}
+              done={item.done}
             />
           )) :
           <li>no items</li>
         }
-      </ContentList>
-    </ContentContainer>
+</>
+//      </ContentList>
+//    </ContentContainer>
   )
 }
-
+/*
 const ContentContainer = styled.div`
   height: calc(100% - 7.5rem);
   padding: 24px 0px 24px 24px;
@@ -42,5 +39,5 @@ const ContentList = styled.ul`
   overflow-y: auto;
   padding-right: 24px;
 `;
-
+*/
 export default Todos;

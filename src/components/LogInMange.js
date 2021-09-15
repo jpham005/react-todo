@@ -16,7 +16,15 @@ function LogInMange() {
       <>
         <LogOut /> <br />
         <CreateList /> <br />
-        {state.lists && `리스트를 고르세요 : ${<SelectList />}`}<br />
+        {state.lists && (
+          <>
+            리스트를 고르세요 : <SelectList />
+            현재 페이지: {state.currentList === null
+              ? '없음'
+              : state.currentList.name
+            }
+          </>
+          )}<br />
         {state.currentList && <Todos />}
       </>
     )

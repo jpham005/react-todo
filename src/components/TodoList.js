@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useTodoState } from '../TodoContext';
+import React from 'react';
+import { useTodoDispatch } from '../TodoContext';
 
-function TodoList({ name }) {
-  const state = useTodoState();
-  const [value, setValue] = useState()
+function TodoList({ list }) {
+  const dispatch = useTodoDispatch();
   
-  useEffect(() => {
-
-  }, [value])
+  const onSwitch = () => {
+    dispatch({ type: 'SWITCHLIST', payload: list })
+  }
 
   return (
-    <option value={value}>{name}</option>
+    <button onClick={onSwitch}>{list.name}</button>
   )
 }
 

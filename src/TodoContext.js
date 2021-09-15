@@ -1,17 +1,5 @@
-import React, { createContext, useReducer, useRef, useContext } from 'react';
-/*interface InitialState {
-  user: {
-    isLoggedIn: boolean;
-    username: string;
-  };
-  lists: string[];
-  items: {
-    [key: string]: {
-      id: string | null,
-      text: string | null,
-    }[];
-  }
-}*/
+import React, { createContext, useReducer, useContext } from 'react';
+
 const initialTodos = {
   user: {
     isLoggedIn: true,
@@ -21,13 +9,19 @@ const initialTodos = {
     {id: 1, name: 'list1'},
     {id: 2, name: 'list2'},
     {id: 3, name: 'list3'},
+    {id: 4, name: 'list4'}
   ],
   items: [
-
+    {id: 1, text: 'item1', done: false, listId: 1},
+    {id: 2, text: 'item2', done: false, listId: 2},
+    {id: 3, text: 'item3', done: false, listId: 3},
+    {id: 4, text: 'item4', done: false, listId: 4}
   ],
   isDeleting: false,
 
   currentList: null,
+
+  currentListPage: 1,
 }
 
 function save() {

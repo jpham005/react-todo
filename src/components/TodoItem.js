@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTodoDispatch, useTodoState } from '../TodoContext';
-import styled from '@emotion/styled';
+//import styled from '@emotion/styled';
 
 function TodoItem({ id, done, text }) {
   const dispatch = useTodoDispatch();
@@ -15,16 +15,16 @@ function TodoItem({ id, done, text }) {
   
   return (
     <>
-      <Item onClick={onToggle} done={done}>
+      <li onClick={onToggle} done={done}>
         {text}
-      </Item>
+      </li>
     </>
   )
 }
 
 export default TodoItem;
 
-
+/*
 const Item = styled.li`
   display: flex;
   align-items: center;
@@ -37,4 +37,4 @@ const Item = styled.li`
       text-decoration: line-through;
     `
   }
-`;
+`;*/
