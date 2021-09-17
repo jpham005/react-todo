@@ -13,21 +13,23 @@ function TodoHead() {
   }).format(date);
 
   const state = useTodoState();
-  const leftCount = state.items ? 
-    Object.values(state.items).filter(arr => !arr.done).length :
-    0;
-
+  const leftCount = state.currentList !== null ? state.items.filter(item => 
+    (item.done === false) && (item.listId === state.currentList.id)
+  ).length : null;
+  
   return (
     <HeaderContainer>
       <HeaderTitle>
         {timeFormat.replaceAll('.', '')}
       </HeaderTitle>
       <HeaderLeftCount>
-        {leftCount}개 할 일 남음 <br />
         {`삭제 중: ${state.isDeleting}`}<br />
         {state.currentList === null
           ? '현재 리스트: 없음'
-          : `현재 리스트: ${state.currentList.name}`
+          : <>
+              현재 리스트: {state.currentList.name}<br/>
+              {leftCount}개 할 일 남음
+            </>
         }
       </HeaderLeftCount>
     </HeaderContainer>

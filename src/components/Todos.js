@@ -15,7 +15,7 @@ function Todos() {
         {items !== [] ? //need to change here too
           items.map(item => (
             <TodoItem 
-              //key={item.id}
+              key={item.id}
               id={item.id}
               text={item.text}
               done={item.done}

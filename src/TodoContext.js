@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useContext } from 'react';
+import * as fs from './fs'
 
 const initialTodos = {
   user: {
@@ -77,13 +78,13 @@ function todoReducer(state, action) {
       }
 
     case 'TOGGLE-ITEM':
-      if (action.isDeleting === true) {
+      if (action.payload.isDeleting === true) {
         return {
           ...state,
           items: state.items.filter(item => item.id !== action.payload.id)
         }
       }
-
+      
       return {
         ...state,
         items: state.items.map(item =>
