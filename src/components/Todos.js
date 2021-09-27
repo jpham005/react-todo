@@ -6,22 +6,22 @@ import { useTodoState } from '../TodoContext';
 function Todos() {
   const state = useTodoState();
   const currentListId = state.currentList.id;
-//need to make validating proccess (find items by listId)
   const items = state.items.filter(item => item.listId === currentListId)
+
   return (
 //    <ContentContainer>
 //      <ContentList>
 <>
-        {items !== [] ? //need to change here too
-          items.map(item => (
-            <TodoItem 
-              key={item.id}
-              id={item.id}
-              text={item.text}
-              done={item.done}
-            />
-          )) :
-          <li>no items</li>
+        {(items.length !== 0) 
+          ? items.map(item => (
+              <TodoItem 
+                key={item.id}
+                id={item.id}
+                text={item.text}
+                done={item.done}
+              />
+            )) 
+          : <li>no items</li>
         }
 </>
 //      </ContentList>

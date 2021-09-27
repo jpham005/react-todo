@@ -19,15 +19,12 @@ function LogInMange() {
         {state.lists && (
           <>
             리스트를 고르세요 : <SelectList />
-            현재 페이지: {state.currentList === null
-              ? '없음'
-              : state.currentList.name
-            }
+            현재 페이지: {state.currentListPage}
           </>
           )}<br />
         {state.currentList && <Todos />}
       </>
     )
 }
-//is working?
+
 export default LogInMange;

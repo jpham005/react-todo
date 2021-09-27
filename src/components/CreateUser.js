@@ -89,7 +89,7 @@ function CreateUser() {
         </form>
       )}
       <button onClick={onToggle}>
-        new user
+        {open ? 'cancel' : 'createuser'}
       </button>
     </>
   )

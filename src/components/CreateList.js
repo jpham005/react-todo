@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useTodoDispatch, useTodoValidateFromServer } from '../TodoContext';
+import { useTodoDispatch, useTodoState } from '../TodoContext';
 
 function CreateList() {
+  const state = useTodoState();
   const dispatch = useTodoDispatch();
-  const validateFromServer = useTodoValidateFromServer();
+  //const validateFromServer = useTodoValidateFromServer();
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
@@ -11,9 +12,7 @@ function CreateList() {
   const onToggle = () => setOpen(!open);
   const onChange = e => setValue(e.target.value)
 
-  const validate = () => {
-    const strValue = String(value);
-
+  const validate = (strValue) => {
     if (strValue === '') {
       alert('listname is empty');
       return;
@@ -23,24 +22,40 @@ function CreateList() {
       alert('value must be between 2 ~ 10');
       return;
     }
-    
-    if (validateFromServer('list', strValue) === 'failed') {
-      alert('list name has occupied');
-      return;
-    }
   }
   
-  const onSubmit = e => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    validate();
-    //async & await?
-    dispatch({
-      type: 'CREATELIST',
-      payload: {
-        name: value,
-      }
+    
+    const strValue = String(value);
+    validate(strValue);
+    
+    const response = await fetch('http://localhost:8300/list', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'appication/json',
+        authorization: `Bearer ${state.user.token}`
+      },
+      body: JSON.stringify({
+        name: strValue
+      })
     });
 
+    if (response.status === 400){
+      const data = await response.text();
+      alert(data);
+    } else {
+      const data = await response.json();
+
+      dispatch({
+        type: 'CREATELIST',
+        payload: {
+          name: data.name,
+          id: data.id,
+        }
+      });  
+    }
+    
     setValue('');
     setOpen(false);
   }

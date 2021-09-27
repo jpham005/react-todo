@@ -1,23 +1,16 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import * as fs from './fs'
 
 const initialTodos = {
   user: {
-    isLoggedIn: true,
-    username: 'admin',
+    isLoggedIn: false,
+    username: null,
+    token: null
   },
-  lists: [
-    {id: 1, name: 'list1'},
-    {id: 2, name: 'list2'},
-    {id: 3, name: 'list3'},
-    {id: 4, name: 'list4'}
-  ],
-  items: [
-    {id: 1, text: 'item1', done: false, listId: 1},
-    {id: 2, text: 'item2', done: false, listId: 2},
-    {id: 3, text: 'item3', done: false, listId: 3},
-    {id: 4, text: 'item4', done: false, listId: 4}
-  ],
+  
+  lists: [],
+
+  items: [],
+
   isDeleting: false,
 
   currentList: null,
@@ -36,29 +29,24 @@ function todoReducer(state, action) {
       return state;
     
     case 'CREATELIST':
-      save(action.payload)
-      const newList = [];
-      //const newList = load(by listname)
       return {
         ...state,
-        lists: state.lists.concat(newList)
+        lists: state.lists.concat(action.payload)
       }
     
     case 'CREATEITEM':
-      save(action.payload)
-      const newItem = {};
       return {
         ...state,
-        items: state.items.concat(newItem)
+        items: state.items.concat(action.payload)
       }
     
     case 'LOGIN':
-      const newState = {user:{},lists:[],items:{}}
-      //load user's lists, items from server
       return {
-       ...newState,
-       user: {
-         isLoggedIn: true,
+        ...state,
+        user: {
+          isLoggedIn: true,
+          username: action.payload.username,
+          token: action.payload.token
         }
       }
     
@@ -68,6 +56,7 @@ function todoReducer(state, action) {
         user: {
           isLoggedIn: false,
           username: null,
+          token: null
         }
       }
     

@@ -1,23 +1,54 @@
 import React, { useState } from 'react';
-import { useTodoDispatch } from '../TodoContext';
+import { useTodoDispatch, useTodoState } from '../TodoContext';
 import styled from '@emotion/styled';
 
 function Fab() {
-
+  const state = useTodoState();
   const [isExtended, setIsExtended] = useState(false);
   const onToggle = () => setIsExtended(!isExtended);
 
   const dispatch = useTodoDispatch();
   
-  const onCreate = () => {
-      const text = prompt('what to do', '');
-      if (text === null || text === '') return;
+  const onCreate = async () => {
+    if (state.currentList === null) {
+      alert('plz select list');
+      return;
+    }
 
-      dispatch({ 
+    const text = prompt('what to do', '');
+
+    if (text === null || text === '') {
+      alert('item is empty');
+      return;
+    }
+
+    if (text.length > 20) {
+      alert('item must be shorter than 20');
+      return;
+    }
+
+    const response = await fetch('http://localhost:8300/item', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'appication/json',
+        authorization: `Bearer ${state.user.token}`
+      },
+      body: JSON.stringify({
+        listId: state.currentList.id,
+        description: text,
+        image: ''
+      })
+    });
+
+    const data = await response.json();
+    console.log(data);
+    dispatch({ 
       type: 'CREATEITEM', 
       payload: {
-        text: text,
+        id: data.id,
+        text: data.description,
         done: false,
+        listId: data.listId
       }
     })
   }
