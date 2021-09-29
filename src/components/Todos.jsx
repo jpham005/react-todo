@@ -1,7 +1,7 @@
 import React from 'react';
 //import styled from '@emotion/styled';
-import TodoItem from './TodoItem';
-import { useTodoState } from '../TodoContext';
+import TodoItem from './TodoItem.jsx';
+import { useTodoState } from '../TodoContext.jsx';
 
 function Todos() {
   const state = useTodoState();

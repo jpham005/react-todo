@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTodoDispatch, useTodoState } from '../TodoContext';
+import { useTodoDispatch, useTodoState } from '../TodoContext.jsx';
 import styled from '@emotion/styled';
 
 function Fab() {
@@ -27,7 +27,7 @@ function Fab() {
       return;
     }
 
-    const response = await fetch('http://localhost:8300/item', {
+    const response = await fetch('http://localhost:8300/item/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'appication/json',
@@ -35,18 +35,18 @@ function Fab() {
       },
       body: JSON.stringify({
         listId: state.currentList.id,
-        description: text,
+        text,
         image: ''
       })
     });
 
     const data = await response.json();
-    console.log(data);
+    
     dispatch({ 
       type: 'CREATEITEM', 
       payload: {
         id: data.id,
-        text: data.description,
+        text: data.text,
         done: false,
         listId: data.listId
       }

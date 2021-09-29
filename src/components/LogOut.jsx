@@ -1,5 +1,5 @@
 import React from 'react';
-import { useTodoDispatch } from '../TodoContext';
+import { useTodoDispatch } from '../TodoContext.jsx';
 
 function LogOut() {
   const dispatch = useTodoDispatch();

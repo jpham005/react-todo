@@ -1,4 +1,5 @@
-const fs = require('fs');
+const fs = require('fs/promises');
+const syncFs = require('fs');
 
 async function write(pathname, data) {
   const fd = await fs.open(pathname, 'w');
@@ -14,6 +15,13 @@ async function read(pathname, data) {
   return buffer.toString();
 }
 
+function find(path) {
+  if (syncFs.existsSync(path))
+    return true;
+  else
+    return false;
+}
+
 module.exports = {
-  write, read
+  write, read, find
 };

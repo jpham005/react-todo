@@ -15,13 +15,17 @@ class TodoApplication {
     }
   }
   
-
   async save() {
     await fs.write('./todo-data.dat', this.toString()); 
   }
 
   static async load() {
     return TodoApplication.fromString(await fs.read('./todo-data.dat'));
+  }
+
+  static check() {
+    const test = fs.find('./todo-data.dat')
+    return test
   }
 
   toString() {
@@ -71,8 +75,8 @@ class TodoApplication {
     return newList;
   }
 
-  createItem(list, description, thumbnailImage) {
-    const item = TodoListItem.create(list, description, thumbnailImage);
+  createItem(list, text, thumbnailImage) {
+    const item = TodoListItem.create(list, text, thumbnailImage);
 
     this.items[item.id] = item;
     list.addItem(item);
@@ -99,9 +103,28 @@ class TodoApplication {
     return Object.values(this.users).find(el => el.id === userId);
   }
 
+  getTodoListByOwnerId(userId) {
+    const lists = this.getListsByOwnerId(userId);
+
+    const items = lists.reduce((acc, list) => {
+      const newAcc = acc.concat(this.getItemsByListId(list.id));
+      return newAcc;
+    }, []);
+
+    return {
+      lists,
+      items,
+    }
+  }
+
   getListsByName(name) {
     return Object.values(this.lists)
       .filter(list => list.name === name);
+  }
+  
+  getListsByOwnerId(id) {
+    return Object.values(this.lists)
+      .filter(list => list.ownerId === id);
   }
 
   getItemsByListId(listId) {
@@ -204,20 +227,22 @@ class TodoList {
 
 class TodoListItem {
   constructor(params) {
-    const { id, listId, description, thumbnailImage } = params;
+    const { id, listId, text, thumbnailImage, done } = params;
     
     this.id = id;
     this.listId = listId;
-    this.description = description;
+    this.text = text;
     this.thumbnailImage = thumbnailImage; // URI for thumbnail image
+    this.done = done;
   }
 
   toString() {
     return JSON.stringify({
       id: this.id,
       listId: this.listId,
-      description: this.description,
+      text: this.text,
       thumbnailImage: this.thumbnailImage,
+      done: this.done
     });
   }
 
@@ -227,30 +252,31 @@ class TodoListItem {
     return new TodoListItem(obj);
   }
 
-  static create(list, description, thumbnailImage) {
-    TodoListItem.validate({ list, description, thumbnailImage }, false);
+  static create(list, text, thumbnailImage) {
+    TodoListItem.validate({ list, text, thumbnailImage }, false);
 
     return new TodoListItem({
       id: uuid.v4(),
       listId: list.id,
-      description,
+      text,
       thumbnailImage,
+      done: false
     });
   }
 
   static validate(params, updating) {
-    const { list, description, thumbnailImage } = params;
+    const { list, text, thumbnailImage } = params;
 
-    if (typeof description !== 'string') {
-      throw Error('description must be string');
+    if (typeof text !== 'string') {
+      throw Error('text must be string');
     }
 
     if (typeof thumbnailImage !== 'string') {
       throw Error('thumbnailImage url must be string');
     }
 
-    if (description.length < 1) {
-      throw Error('description is empty');
+    if (text.length < 1) {
+      throw Error('text is empty');
     }
 
     if (false == updating) {
@@ -263,10 +289,11 @@ class TodoListItem {
   update(params) {
     TodoListItem.validate(params, true);
 
-    const { description, thumbnailImage } = params;
+    const { text, thumbnailImage, done } = params;
 
-    this.description = description;
+    this.text = text;
     this.thumbnailImage = thumbnailImage;
+    this.done = done;
   }
 }
 

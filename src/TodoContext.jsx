@@ -18,16 +18,8 @@ const initialTodos = {
   currentListPage: 1,
 }
 
-function save() {
-
-}
-
 function todoReducer(state, action) {
   switch (action.type) {
-    case 'CREATEUSER':
-      save(action.payload)
-      return state;
-    
     case 'CREATELIST':
       return {
         ...state,
@@ -43,11 +35,9 @@ function todoReducer(state, action) {
     case 'LOGIN':
       return {
         ...state,
-        user: {
-          isLoggedIn: true,
-          username: action.payload.username,
-          token: action.payload.token
-        }
+        user: action.payload.user,
+        lists: action.payload.lists,
+        items: action.payload.items
       }
     
     case 'LOGOUT':
@@ -66,19 +56,22 @@ function todoReducer(state, action) {
         currentList: action.payload
       }
 
-    case 'TOGGLE-ITEM':
-      if (action.payload.isDeleting === true) {
-        return {
-          ...state,
-          items: state.items.filter(item => item.id !== action.payload.id)
-        }
-      }
-      
+    case 'REMOVE-ITEM':
       return {
         ...state,
-        items: state.items.map(item =>
-          item.id === action.payload.id ? {...item, done: !item.done} : item
-        ),
+        lists: action.payload.lists,
+        items: action.payload.items
+      }
+
+    case 'TOGGLE-ITEM':
+      return {
+        ...state,
+        items: state.items.map(item => {
+          if (item.id === action.payload.id)
+            return action.payload;
+          else
+            return item
+        })
       }
     
     case 'TOGGLE-DELETE':
@@ -86,6 +79,27 @@ function todoReducer(state, action) {
         ...state,
         isDeleting: !state.isDeleting,
       }
+    
+    case 'PREVPAGE':
+      return {
+        ...state,
+        currentListPage: state.currentListPage - 1
+      }
+
+    case 'NEXTPAGE':
+      return {
+        ...state,
+        currentListPage: state.currentListPage + 1
+      }
+
+    case 'REMOVELIST':
+      return {
+        ...state,
+        lists: action.payload.lists,
+        items: action.payload.items,
+        currentList: null
+      }
+
     default:
       throw new Error(`unhandled action type: ${action.type}`)
   }
@@ -97,16 +111,11 @@ const TodoValiateFromServerContext = createContext();
 
 export function TodoProvider({ children }) {
   const [state, dispatch] = useReducer(todoReducer, initialTodos);
-  const validateFromServer = (type, name) => {
-    //somehow validate in server
-  }
 
   return (
     <TodoStateContext.Provider value={state}>
       <TodoDispatchContext.Provider value={dispatch}>
-        <TodoValiateFromServerContext.Provider value={validateFromServer}>
-          {children}
-        </TodoValiateFromServerContext.Provider>
+        {children}
       </TodoDispatchContext.Provider>
     </TodoStateContext.Provider>
   );

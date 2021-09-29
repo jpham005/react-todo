@@ -1,8 +1,8 @@
 import React from 'react';
-import TodoHead from './components/TodoHead';
-import Fab from './components/Fab';
-import { TodoProvider } from './TodoContext';
-import LogInMange from './components/LogInMange';
+import TodoHead from './components/TodoHead.jsx';
+import Fab from './components/Fab.jsx';
+import { TodoProvider } from './TodoContext.jsx';
+import LogInMange from './components/LogInMange.jsx';
 
 function App() {
   return (
