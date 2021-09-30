@@ -33,6 +33,9 @@ class Server {
         case '/user/create':
           this.handleRequest(req, res, this.handleCreateUser.bind(this));
           break;
+        case '/user/remove':
+          this.handleRequest(req, res, this.handleRemoveUser.bind(this));
+          break;
         case '/list/create':
           this.handleRequest(req, res, this.handleCreateList.bind(this));
           break;
@@ -183,6 +186,12 @@ class Server {
     const newUser = this.app.createUser(username, password, image);
 
     this.writeJson(response, newUser);
+    this.app.save();
+  }
+
+  handleRemoveUser(requset, response, data, user) {
+    this.app.removeUser(user.id);
+    response.write('done');
     this.app.save();
   }
   

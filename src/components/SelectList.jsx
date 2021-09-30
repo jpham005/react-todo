@@ -6,7 +6,7 @@ function SelectList() {
   const state = useTodoState();
   const currentPage = state.currentListPage;
   const len = state.lists.length;
-//set page when list delete
+
   const rendering = () => {
     const result = [];
       for (let i = ((currentPage - 1) * 4); 

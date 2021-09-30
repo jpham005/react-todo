@@ -42,12 +42,7 @@ function todoReducer(state, action) {
     
     case 'LOGOUT':
       return {
-        ...initialTodos,
-        user: {
-          isLoggedIn: false,
-          username: null,
-          token: null
-        }
+        ...initialTodos
       }
     
     case 'SWITCHLIST':
@@ -97,7 +92,12 @@ function todoReducer(state, action) {
         ...state,
         lists: action.payload.lists,
         items: action.payload.items,
-        currentList: null
+        currentList: null,
+      }
+    case 'SETCURRENTLISTPAGE':
+      return {
+        ...state,
+        currentListPage: action.payload.currentListPage
       }
 
     default:

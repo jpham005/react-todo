@@ -16,8 +16,8 @@ function CreateList() {
       throw Error('listname is empty');
     }
 
-    if (value.length < 2 || value.length > 10) {
-      throw Error('listname must be between 2 ~ 10');
+    if (value.length < 1 || value.length > 20) {
+      throw Error('listname must be between 1 ~ 20');
     }
   }
   
@@ -56,8 +56,8 @@ function CreateList() {
       if (e.message === 'listname is empty')
         alert('listname is empty');
 
-      else if (e.message === 'listname must be between 2 ~ 10')
-        alert('listname must be between 2 ~ 10');
+      else if (e.message === 'listname must be between 1 ~ 20')
+        alert('listname must be between 1 ~ 20');
       
       else
         alert(`${e.message}`);

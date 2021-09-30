@@ -7,6 +7,7 @@ import SelectList from './SelectList.jsx';
 import Todos from './Todos.jsx'
 import ListPaging from './ListPaging.jsx';
 import RemoveList from './RemoveList.jsx';
+import RemoveUser from './RemoveUser.jsx';
 
 function LogInMange() {
   const state = useTodoState();
@@ -16,7 +17,7 @@ function LogInMange() {
   else
     return (
       <>
-        <LogOut /> <br />
+        <LogOut /> <RemoveUser /><br />
         <CreateList /> <br />
         {state.lists && (
           <>
@@ -24,8 +25,14 @@ function LogInMange() {
             <ListPaging />
           </>
           )}<br />
-        {state.currentList && <Todos />}<br />
-        <RemoveList />
+        {state.currentList 
+          &&
+            <>
+              <Todos />
+              <br />
+              <RemoveList />
+            </>    
+        }
       </>
     )
 }

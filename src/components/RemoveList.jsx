@@ -28,6 +28,16 @@ function RemoveList() {
         items: newTodoList.items
         }
       });
+
+      dispatch({ type: 'SETCURRENTLISTPAGE', payload: {
+          currentListPage: (
+            state.lists.length - 1 
+            === (state.currentListPage - 1) * 4
+          )
+            ? state.currentListPage - 1
+            : state.currentListPage
+        }
+      });
     } catch (e) {
       alert('bad server');
     }
